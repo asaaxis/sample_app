@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @travel_plan.name %>
+</p>
+
+<p>
+  <strong>Start schedule:</strong>
+  <%= @travel_plan.start_schedule %>
+</p>
+
+<p>
+  <strong>End schedule:</strong>
+  <%= @travel_plan.end_schedule %>
+</p>
+
+<%= gears = [] %>
+<% @team.members.each do |member| %>
+  <% member.gears.each do |gear| %>
+    <%= gear.name %>
+    <% gears << gear %>
+  <% end %>
+<% end %>
+
+<%= form_with(model: @team) do |form| %>
+
+  <div class="field">
+    <%= form.label :メンバーが持ってる、持ち物リスト %>
+    <%= form.collection_check_boxes(:members, gears, :id, :name) %>
+  </div>
+    <div class="actions">
+    <%= form.submit %>
+    </div>
+    <% end %>
+    
+    <p>コメント一覧（ここから下の内容が重要）</p>
+
+    <!-- このcomments_areaというHTMLのidを取得して、そのdivの部分だけを更新する -->
+    <div id="comments_area">
+      <!-- 投稿されたコメント一覧をブログの詳細ページに表示するためのrender -->
+      <%= render partial: 'comments/index', locals: { team: @team, comments: @comments, travel_plan: @travel_plan } %>
+    </div>
+  
+    <!-- コメント入力欄をブログの詳細ページに表示するためのrender -->
+    <%= render partial: 'comments/form', locals: { team: @team, comment: @comment, travel_plan: @travel_plan } %>
+
+<%= link_to 'Edit', edit_team_travel_plan_path(Team.find(params[:team_id]), @travel_plan) %> |
+<%= link_to 'Back', team_travel_plans_path %>
